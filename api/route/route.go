@@ -1,4 +1,4 @@
-package router
+package route
 
 import (
 	"everythingapp/api/controller"
@@ -6,11 +6,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// SetupRoutes func
 func SetupRoutes(app *fiber.App) {
-	// grouping
 	api := app.Group("/api")
 	v1 := api.Group("/user")
-	// routes
+
 	v1.Post("/", controller.CreateUser)
+	v1.Get("/", controller.GetAllUsers)
 }

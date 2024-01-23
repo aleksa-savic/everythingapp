@@ -1,7 +1,7 @@
 package main
 
 import (
-	router "everythingapp/api/route"
+	route "everythingapp/api/route"
 	database "everythingapp/db"
 	"fmt"
 	"log"
@@ -12,16 +12,17 @@ import (
 func helloWorld(c *fiber.Ctx) error {
 	return c.SendString("Hello World")
 }
-func initDatabase() {
 
-}
 func main() {
 	app := fiber.New()
 
 	database.ConnectDB()
-	router.SetupRoutes(app)
-
+	route.SetupRoutes(app)
 	app.Get("/", helloWorld)
+
+	app.Use(func(c *fiber.Ctx) error {
+		return c.SendStatus(404) // => 404 "Not Found"
+	})
 	// Start the server
 	log.Fatal(app.Listen(":3000"))
 
