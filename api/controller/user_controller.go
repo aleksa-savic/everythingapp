@@ -71,3 +71,14 @@ func GetSingleUserByUsername(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "User Found", "data": user})
 }
+
+func GetUsersByName(c *fiber.Ctx) error {
+	db := database.DB
+	targetName := c.Params("name")
+	var users []model.User
+	result := db.Where("names LIKE ?", "%"+targetName+"%").Find(&users)
+	if result.Error != nil || len(users) == 0 {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found by name", "data": nil})
+	}
+	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "User found", "data": users})
+}
