@@ -1,6 +1,8 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 // User struct
 type User struct {
@@ -9,4 +11,8 @@ type User struct {
 	Email    string `gorm:"uniqueIndex;not null" json:"email"`
 	Password string `gorm:"not null" json:"password"`
 	Names    string `json:"names"`
+}
+
+type Users struct {
+	Users []User `json:"users"`
 }
