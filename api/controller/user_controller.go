@@ -24,8 +24,7 @@ func DeleteUserByID(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Failed to delete user", "data": nil})
 	}
 	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "User deleted"})
-)
-
+}
 func CreateUser(c *fiber.Ctx) error {
 	db := database.DB
 	user := new(model.User)
