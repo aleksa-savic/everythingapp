@@ -18,6 +18,8 @@ func main() {
 
 	database.ConnectDB()
 	app.Get("/", helloWorld)
+
 	// Start the server
 	log.Fatal(app.Listen(":3000"))
+
 }
