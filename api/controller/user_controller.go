@@ -25,6 +25,7 @@ func DeleteUserByID(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "User deleted"})
 }
+
 func CreateUser(c *fiber.Ctx) error {
 	db := database.DB
 	user := new(model.User)
@@ -50,29 +51,24 @@ func GetAllUsers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
 }
 
-// update a user in db
-func UpdateUser(c *fiber.Ctx) error {
+// update a user in db by id
+func UpdateUserById(c *fiber.Ctx) error {
 
-	type updateUser struct {
-		Email string `json:"email"`
-	}
+	u := new(model.User)
 	db := database.DB
-	var user model.User
-	// get id params
+
 	id := c.Params("id")
-	// find single user in the database by id
-	db.Find(&user, "id = ?", id)
-	if user.ID == uuid.Nil {
+	//trazenjen po id
+	db.Find(&u, "id = ?", id)
+	if u.ID == uuid.Nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
 	}
-	var updateUserData updateUser
-	err := c.BodyParser(&updateUserData)
+	err := c.BodyParser(u)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Something's wrong with your input", "data": err})
 	}
-	user.Email = updateUserData.Email
-	// Save the Changes
-	db.Save(&user)
+
+	db.Save(&u)
 	// Return the updated user
-	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "users Found", "data": user})
+	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "users Found", "data": u})
 }
