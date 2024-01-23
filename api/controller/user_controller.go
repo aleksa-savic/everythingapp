@@ -49,3 +49,30 @@ func GetAllUsers(c *fiber.Ctx) error {
 	} // return users
 	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
 }
+
+// update a user in db
+func UpdateUser(c *fiber.Ctx) error {
+
+	type updateUser struct {
+		Email string `json:"email"`
+	}
+	db := database.DB
+	var user model.User
+	// get id params
+	id := c.Params("id")
+	// find single user in the database by id
+	db.Find(&user, "id = ?", id)
+	if user.ID == uuid.Nil {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+	}
+	var updateUserData updateUser
+	err := c.BodyParser(&updateUserData)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Something's wrong with your input", "data": err})
+	}
+	user.Email = updateUserData.Email
+	// Save the Changes
+	db.Save(&user)
+	// Return the updated user
+	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "users Found", "data": user})
+}
