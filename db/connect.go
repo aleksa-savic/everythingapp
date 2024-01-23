@@ -12,7 +12,7 @@ import (
 func ConnectDB() {
 	var err error
 
-	dsn := "host=localhost user=postgres password=postgrespw dbname=everythingdb port=5432"
+	dsn := "host=192.168.1.20 user=postgres password=postgrespw dbname=everythingdb port=5432"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
@@ -22,4 +22,5 @@ func ConnectDB() {
 	fmt.Println("Connection Opened to Database")
 	DB.AutoMigrate(&model.User{})
 	fmt.Println("Database Migrated")
+
 }

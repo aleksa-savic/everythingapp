@@ -14,3 +14,7 @@ type User struct {
 	Names    string    `json:"names"`
 	ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 }
+
+type Users struct {
+	Users []User `json:"users"`
+}
