@@ -10,3 +10,7 @@ type User struct {
 	Password string `gorm:"not null" json:"password"`
 	Names    string `json:"names"`
 }
+
+type Users struct {
+	Users []User `json:"users"`
+}
