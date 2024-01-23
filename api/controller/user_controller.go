@@ -51,7 +51,6 @@ func GetAllUsers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
 }
 
-// update a user in db by id
 func UpdateUserById(c *fiber.Ctx) error {
 
 	u := new(model.User)
@@ -71,4 +70,30 @@ func UpdateUserById(c *fiber.Ctx) error {
 	db.Save(&u)
 	// Return the updated user
 	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "users Found", "data": u})
+}
+
+func UpdateUserByEmail(c *fiber.Ctx) error {
+
+	u := new(model.User)
+	db := database.DB
+
+	email := c.Params("email")
+
+	result := db.Where("email = ?", email).First(&u)
+	if result.Error != nil {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+	}
+
+	// Parsiranje za ažuriranje podataka korisnika
+	err := c.BodyParser(u)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Something's wrong with your input", "data": err})
+	}
+
+	result = db.Save(&u)
+	if result.Error != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to update user", "data": result.Error})
+	}
+
+	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "User updated", "data": u})
 }
